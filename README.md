@@ -36,6 +36,7 @@ game logic handled by Python.
     AI-RPG-Adventure/
     ├── ai.py
     ├── tools.py
+    ├── prompts.py
     ├── merchant.py
     ├── character.py
     ├── character.example.json
