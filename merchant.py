@@ -1,4 +1,4 @@
-import json
+from character import load_character, save_character
 
 def shop_list():
     items = [
@@ -30,17 +30,21 @@ def buy_item(item_id):
     items = shop_list()
 
     for item in items:
-        if item['id'] == item_id:
+        if item["id"] == item_id:
 
-            with open('character.json', 'r', encoding='utf-8') as read_file:
-                character = json.load(read_file)
+            character = load_character()
 
-            if item['price'] <= character['gold']:
-                character['gold'] -= item['price']
-                character['inventory'].append(item['name'])
+            if not character:
+                return {
+                    "success": False,
+                    "message": "Character data not found.",
+                }
 
-                with open('character.json', 'w', encoding='utf-8') as write_file:
-                    json.dump(character, write_file, indent=4, ensure_ascii=False)
+            if item["price"] <= character["gold"]:
+                character["gold"] -= item["price"]
+                character["inventory"].append(item["name"])
+
+                save_character(character)
 
                 return {
                     "success": True,
@@ -49,6 +53,12 @@ def buy_item(item_id):
                     "remaining_gold": character["gold"]
                 }
 
-            return 'Not enough gold.'
+            return {
+                "success": False,
+                "message": "Not enough gold to purchase the item.",
+            }
 
-    return 'Item not found.'
+    return {
+        "success": False,
+        "message": "Item not found."
+    }
